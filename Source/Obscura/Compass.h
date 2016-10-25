@@ -3,13 +3,14 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
+#include "Sun.h"
 #include "Compass.generated.h"
 
 UCLASS()
 class OBSCURA_API ACompass : public AActor
 {
 	GENERATED_BODY()
-	
+
 public:	
 	enum CompassPositions {
 		TT,
@@ -24,6 +25,9 @@ public:
 	};
 
 	CompassPositions currPosition;
+	bool isCompassOn;
+
+	void ACompass::SetupPlayerInputComponent(class UInputComponent* InputComponent);
 
 	// Sets default values for this actor's properties
 	ACompass();
@@ -34,5 +38,10 @@ public:
 	// Called every frame
 	virtual void Tick( float DeltaSeconds ) override;
 
+	void setCompassPosition(float x, float y);
+
 	CompassPositions getCompassPosition();
+
+	UPROPERTY(EditAnywhere)
+	class ASun* sun;
 };

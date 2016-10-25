@@ -1,6 +1,7 @@
 // Copyright 1998-2016 Epic Games, Inc. All Rights Reserved.
 #pragma once
 #include "GameFramework/Character.h"
+#include "Compass.h"
 #include "ObscuraCharacter.generated.h"
 
 UCLASS(config=Game)
@@ -16,7 +17,11 @@ class AObscuraCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
 public:
+
 	AObscuraCharacter();
+
+	UPROPERTY(EditAnywhere)
+	class ACompass* compass;
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
@@ -26,13 +31,26 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
 
+	float xInput;
+	float yInput;
+
+	// Called every frame
+	virtual void Tick(float DeltaSeconds) override;
+
+
 protected:
+
+	void AObscuraCharacter::CompassOn();
+
+	void AObscuraCharacter::CompassOff();
 
 	/** Called for forwards/backward input */
 	void MoveForward(float Value);
 
 	/** Called for side to side input */
 	void MoveRight(float Value);
+
+	void SetCompassOverhead();
 
 	/** 
 	 * Called via input to turn at a given rate. 

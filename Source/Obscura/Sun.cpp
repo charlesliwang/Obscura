@@ -19,12 +19,25 @@ void ASun::BeginPlay()
 	
 }
 
+void ASun::UpdateSun(int octant)
+{
+	// If sun overhead.
+	if (octant == 8) {
+
+	}
+	else {
+		targetAngle = octant * 45.0f;
+	}
+}
+
 // Called every frame
 void ASun::Tick( float DeltaTime )
 {
 	FRotator sunRotation = GetActorRotation();
-	sunRotation.Yaw++;
-	SetActorRotation(sunRotation);
+	if (fabs(sunRotation.Yaw - targetAngle) > 0.1f) {
+		//sunRotation.Yaw = (sunRotation.Yaw + 1) % 360;
+		SetActorRotation(sunRotation);
+	}
 	Super::Tick( DeltaTime );
 }
 

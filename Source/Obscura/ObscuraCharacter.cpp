@@ -1,6 +1,7 @@
 // Copyright 1998-2016 Epic Games, Inc. All Rights Reserved.
 
 #include "Obscura.h"
+#include "Compass.h"
 #include "ObscuraCharacter.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -65,8 +66,21 @@ void AObscuraCharacter::SetupPlayerInputComponent(class UInputComponent* InputCo
 	// handle touch devices
 	InputComponent->BindTouch(IE_Pressed, this, &AObscuraCharacter::TouchStarted);
 	InputComponent->BindTouch(IE_Released, this, &AObscuraCharacter::TouchStopped);
+
+	InputComponent->BindAction("ToggleCompass", IE_Pressed, this, &AObscuraCharacter::CompassOn);
+	InputComponent->BindAction("ToggleCompass", IE_Released, this, &AObscuraCharacter::CompassOff);
+	InputComponent->BindAction("CompassOverhead", IE_Pressed, this, &AObscuraCharacter::SetCompassOverhead);
 }
 
+void AObscuraCharacter::CompassOn() {
+	compass->isCompassOn = true;
+	UE_LOG(LogTemp, Warning, TEXT("compass on"));
+}
+
+void AObscuraCharacter::CompassOff() {
+	compass->isCompassOn = false;
+	UE_LOG(LogTemp, Warning, TEXT("compass off"));
+}
 
 void AObscuraCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
 {
@@ -88,13 +102,30 @@ void AObscuraCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Loca
 void AObscuraCharacter::TurnAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
-	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+	if (compass->isCompassOn) {
+		xInput = FMath::Clamp(Rate, -1.0f, 1.0f);
+	}
+	else {
+		AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
+	}
 }
 
 void AObscuraCharacter::LookUpAtRate(float Rate)
 {
-	// calculate delta for this frame from the rate information
-	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
+	if (compass->isCompassOn) {
+		yInput = FMath::Clamp(Rate, -1.0f, 1.0f);
+	}
+	else {
+		// calculate delta for this frame from the rate information
+		AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
+	}
+}
+
+void AObscuraCharacter::SetCompassOverhead()
+{
+	if (compass->isCompassOn) {
+		compass->setCompassPosition(0, 0);
+	}
 }
 
 void AObscuraCharacter::MoveForward(float Value)
@@ -124,4 +155,15 @@ void AObscuraCharacter::MoveRight(float Value)
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
 	}
+}
+
+// Called every frame
+void AObscuraCharacter::Tick(float DeltaTime)
+{
+	if (compass->isCompassOn && (fabs(xInput) > 0.1f || fabs(yInput) > 0.1f)) {
+		//UE_LOG(LogTemp, Warning, TEXT("axis inputs are %f %f"), xInput, yInput);
+		compass->setCompassPosition(xInput, yInput);
+	}
+	Super::Tick(DeltaTime);
+
 }
