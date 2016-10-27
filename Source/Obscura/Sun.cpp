@@ -26,16 +26,21 @@ void ASun::UpdateSun(int octant)
 
 	}
 	else {
-		targetAngle = octant * 45.0f;
+		targetAngle = (octant * 45.0f) - 180.0f;
 	}
+	//UE_LOG(LogTemp, Warning, TEXT("cSun updating %f"), targetAngle);
 }
 
 // Called every frame
 void ASun::Tick( float DeltaTime )
 {
 	FRotator sunRotation = GetActorRotation();
-	if (fabs(sunRotation.Yaw - targetAngle) > 0.1f) {
-		//sunRotation.Yaw = (sunRotation.Yaw + 1) % 360;
+	//UE_LOG(LogTemp, Warning, TEXT("yaaaaaw %f"), sunRotation.Yaw);
+	if (fabs(sunRotation.Yaw - targetAngle) > 0.6f) {
+		//UE_LOG(LogTemp, Warning, TEXT("sun differential"));
+		sunRotation.Yaw += 0.5f;
+		if (sunRotation.Yaw > 360)
+			sunRotation.Yaw -= 360;
 		SetActorRotation(sunRotation);
 	}
 	Super::Tick( DeltaTime );
