@@ -53,7 +53,7 @@ void ACompass::setCompassPosition(float x, float y) {
 	}
 	else if (x > 0.5f && y < -0.5f) {
 		currPosition = BR;
-		UE_LOG(LogTemp, Warning, TEXT("compass pos is BR"));
+		 UE_LOG(LogTemp, Warning, TEXT("compass pos is BR"));
 	}
 	else if (fabs(x) < 0.1f && y < -0.5f) {
 		currPosition = BB;

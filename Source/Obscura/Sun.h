@@ -27,4 +27,6 @@ public:
 	virtual void Tick( float DeltaSeconds ) override;
 
 	float targetAngle;
+	float targetPitch;
+	bool locked;
 };
