@@ -28,5 +28,6 @@ public:
 
 	float targetAngle;
 	float targetPitch;
-	bool locked;
+	bool rotateLock;
+	bool inputLock;
 };

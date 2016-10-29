@@ -37,39 +37,39 @@ void ACompass::setCompassPosition(float x, float y) {
 
 	if (fabs(x) < 0.001f && fabs(y) < 0.001f) {
 		currPosition = MM;
-		UE_LOG(LogTemp, Warning, TEXT("compass pos is MM"));
+		//UE_LOG(LogTemp, Warning, TEXT("compass pos is MM"));
 	}
 	else if (fabs(x) < 0.1f && y > 0.5f) {
 		currPosition = TT;
-		UE_LOG(LogTemp, Warning, TEXT("compass pos is TT"));
+		//UE_LOG(LogTemp, Warning, TEXT("compass pos is TT"));
 	}
 	else if (x > 0.5f && y > 0.5f) {
 		currPosition = TR;
-		UE_LOG(LogTemp, Warning, TEXT("compass pos is TR"));
+		//UE_LOG(LogTemp, Warning, TEXT("compass pos is TR"));
 	}
 	else if (x > 0.5f && fabs(y) < 0.1f) {
 		currPosition = RR;
-		UE_LOG(LogTemp, Warning, TEXT("compass pos is RR"));
+		//UE_LOG(LogTemp, Warning, TEXT("compass pos is RR"));
 	}
 	else if (x > 0.5f && y < -0.5f) {
 		currPosition = BR;
-		 UE_LOG(LogTemp, Warning, TEXT("compass pos is BR"));
+		//UE_LOG(LogTemp, Warning, TEXT("compass pos is BR"));
 	}
 	else if (fabs(x) < 0.1f && y < -0.5f) {
 		currPosition = BB;
-		UE_LOG(LogTemp, Warning, TEXT("compass pos is BB"));
+		//UE_LOG(LogTemp, Warning, TEXT("compass pos is BB"));
 	}
 	else if (x < -0.5f && y < -0.5f) {
 		currPosition = BL;
-		UE_LOG(LogTemp, Warning, TEXT("compass pos is BL"));
+		//UE_LOG(LogTemp, Warning, TEXT("compass pos is BL"));
 	}
 	else if (x < -0.5f && fabs(y) < 0.1f) {
 		currPosition = LL;
-		UE_LOG(LogTemp, Warning, TEXT("compass pos is LL"));
+		//UE_LOG(LogTemp, Warning, TEXT("compass pos is LL"));
 	}
 	else if (x < -0.5f && y > 0.5f) {
 		currPosition = TL;
-		UE_LOG(LogTemp, Warning, TEXT("compass pos is TL"));
+		//UE_LOG(LogTemp, Warning, TEXT("compass pos is TL"));
 	}
 	sun->UpdateSun((int)currPosition);
 }

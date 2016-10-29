@@ -37,12 +37,16 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaSeconds) override;
 
+	bool isInSun;
+
 
 protected:
 
 	void AObscuraCharacter::CompassOn();
 
 	void AObscuraCharacter::CompassOff();
+
+	void inSun();
 
 	/** Called for forwards/backward input */
 	void MoveForward(float Value);
