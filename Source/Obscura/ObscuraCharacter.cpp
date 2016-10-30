@@ -85,8 +85,23 @@ void AObscuraCharacter::CompassOff() {
 	UE_LOG(LogTemp, Warning, TEXT("compass off"));
 }
 
-void AObscuraCharacter::inSun() {
-	// Raycast using LineTraceTest
+void AObscuraCharacter::updateInSun() {
+	//hit info
+	FHitResult RV_Hit(ForceInit);
+
+	FVector start = GetActorLocation();
+	FVector end = GetActorLocation() + (sun->GetActorRotation().Vector() * -9999);
+	ECollisionChannel trace_channel = ECC_Visibility;
+	bool hit = GetWorld()->LineTraceSingleByChannel(RV_Hit, start, end, trace_channel);
+
+	isInSun = !hit;
+	if (isInSun) {
+		UE_LOG(LogTemp, Warning, TEXT("inSun"));
+	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("not inSun"));
+	}
+	
 }
 
 void AObscuraCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
@@ -171,6 +186,7 @@ void AObscuraCharacter::Tick(float DeltaTime)
 		//UE_LOG(LogTemp, Warning, TEXT("axis inputs are %f %f"), xInput, yInput);
 		compass->setCompassPosition(xInput, yInput);
 	}
+	updateInSun();
 	Super::Tick(DeltaTime);
 
 }
