@@ -40,9 +40,19 @@ AObscuraCharacter::AObscuraCharacter()
 
 	// Initially in shadow
 	isInSun = false;
+	damaging = false;
+
+
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+}
+
+void AObscuraCharacter::BeginPlay() {
+	spawnPoint = GetActorTransform();
+	//UE_LOG(LogTemp, Warning, TEXT("spawnPoint: %f, %f, %f"), spawnPoint.GetLocation().X, spawnPoint.GetLocation().Y, spawnPoint.GetLocation().Z);
+
+	Super::BeginPlay();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -96,12 +106,32 @@ void AObscuraCharacter::updateInSun() {
 
 	isInSun = !hit;
 	if (isInSun) {
-		UE_LOG(LogTemp, Warning, TEXT("inSun"));
+		//UE_LOG(LogTemp, Warning, TEXT("inSun"));
 	}
 	else {
-		UE_LOG(LogTemp, Warning, TEXT("not inSun"));
+		//UE_LOG(LogTemp, Warning, TEXT("not inSun"));
 	}
 	
+}
+
+float damageTime;
+void AObscuraCharacter::updatePlayerDamage() {
+	float currTime = UGameplayStatics::GetRealTimeSeconds(GetWorld());
+	if (isInSun) {
+		if (!damaging) {
+			damaging = true;
+			damageTime = currTime;
+		}
+		else {
+			float elapsedTime = currTime - damageTime;
+			if (elapsedTime > 2.0f) {
+				SetActorTransform(spawnPoint);
+			}
+		}
+	}
+	else {
+		damaging = false;
+	}
 }
 
 void AObscuraCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
@@ -187,6 +217,7 @@ void AObscuraCharacter::Tick(float DeltaTime)
 		compass->setCompassPosition(xInput, yInput);
 	}
 	updateInSun();
+	updatePlayerDamage();
 	Super::Tick(DeltaTime);
 
 }

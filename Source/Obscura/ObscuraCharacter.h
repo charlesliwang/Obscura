@@ -38,15 +38,21 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 
 	bool isInSun;
+	bool damaging;
 
+	FTransform spawnPoint;
 
 protected:
 
-	void AObscuraCharacter::CompassOn();
+	virtual void BeginPlay() override;
 
-	void AObscuraCharacter::CompassOff();
+	void CompassOn();
 
-	void AObscuraCharacter::updateInSun();
+	void CompassOff();
+
+	void updateInSun();
+
+	void updatePlayerDamage();
 
 	/** Called for forwards/backward input */
 	void MoveForward(float Value);
