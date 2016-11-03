@@ -40,8 +40,8 @@ AObscuraCharacter::AObscuraCharacter()
 
 	// Initially in shadow
 	isInSun = false;
-	damaging = false;
-
+	damageTime = 0.0f;
+	speedFactor = 1.0f;
 
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
@@ -114,24 +114,26 @@ void AObscuraCharacter::updateInSun() {
 	
 }
 
-float damageTime;
+float prevTime = 0.0f;
 void AObscuraCharacter::updatePlayerDamage() {
 	float currTime = UGameplayStatics::GetRealTimeSeconds(GetWorld());
+	float timeDiff = currTime - prevTime;
 	if (isInSun) {
-		if (!damaging) {
-			damaging = true;
-			damageTime = currTime;
-		}
-		else {
-			float elapsedTime = currTime - damageTime;
-			if (elapsedTime > 2.0f) {
-				SetActorTransform(spawnPoint);
-			}
-		}
+		damageTime += timeDiff;
 	}
 	else {
-		damaging = false;
+		damageTime -= timeDiff;
 	}
+
+	if (damageTime > 2.0f) {
+		SetActorTransform(spawnPoint);
+		damageTime = 0.0f;
+	}
+	else if (damageTime < 0.0f) {
+		damageTime = 0.0f;
+	}
+	prevTime = UGameplayStatics::GetRealTimeSeconds(GetWorld());
+	speedFactor = damageTime + 1.0f;
 }
 
 void AObscuraCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
@@ -190,7 +192,7 @@ void AObscuraCharacter::MoveForward(float Value)
 
 		// get forward vector
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		AddMovementInput(Direction, Value);
+		AddMovementInput(Direction, Value/speedFactor);
 	}
 }
 
@@ -205,7 +207,7 @@ void AObscuraCharacter::MoveRight(float Value)
 		// get right vector 
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		// add movement in that direction
-		AddMovementInput(Direction, Value);
+		AddMovementInput(Direction, Value/speedFactor);
 	}
 }
 

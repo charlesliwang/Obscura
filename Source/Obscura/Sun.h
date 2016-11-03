@@ -30,4 +30,7 @@ public:
 	float targetPitch;
 	bool rotateLock;
 	bool inputLock;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int sunPos;
 };

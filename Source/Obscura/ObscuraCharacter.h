@@ -38,7 +38,8 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 
 	bool isInSun;
-	bool damaging;
+	float damageTime;
+	float speedFactor;
 
 	FTransform spawnPoint;
 
