@@ -42,7 +42,10 @@ public:
 		float damageTime;
 	float speedFactor;
 
-	FTransform spawnPoint;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		FTransform spawnPoint;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float charZ;
 
 protected:
 

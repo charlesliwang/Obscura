@@ -49,6 +49,7 @@ AObscuraCharacter::AObscuraCharacter()
 }
 
 void AObscuraCharacter::BeginPlay() {
+	charZ = GetActorTransform().GetLocation().Z;
 	spawnPoint = GetActorTransform();
 	//UE_LOG(LogTemp, Warning, TEXT("spawnPoint: %f, %f, %f"), spawnPoint.GetLocation().X, spawnPoint.GetLocation().Y, spawnPoint.GetLocation().Z);
 
@@ -102,19 +103,13 @@ void AObscuraCharacter::updateInSun() {
 
 	FVector start = GetActorLocation();
 	FVector end = GetActorLocation() + (sun->GetActorRotation().Vector() * -9999);
+	TArray<AActor*> ActorsToIgnore;
+	FCollisionQueryParams CollisionParams;
+	CollisionParams.AddIgnoredActor(this);
 	ECollisionChannel trace_channel = ECC_Visibility;
-	bool hit = GetWorld()->LineTraceSingleByChannel(RV_Hit, start, end, trace_channel);
-
-	//FString name = RV_Hit.GetActor()->GetHumanReadableName();
+	bool hit = GetWorld()->LineTraceSingleByChannel(RV_Hit, start, end, trace_channel, CollisionParams);
 
 	isInSun = !hit;
-	if (isInSun) {
-		//UE_LOG(LogTemp, Warning, TEXT("inSun"));
-	}
-	else {
-		//UE_LOG(LogTemp, Warning, TEXT("not inSun"));
-	}
-	
 }
 
 float prevTime = 0.0f;
