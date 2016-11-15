@@ -92,6 +92,7 @@ void AObscuraCharacter::CompassOn() {
 
 void AObscuraCharacter::CompassOff() {
 	compass->isCompassOn = false;
+	compass->isDirty = true;
 	UE_LOG(LogTemp, Warning, TEXT("compass off"));
 }
 
@@ -103,6 +104,8 @@ void AObscuraCharacter::updateInSun() {
 	FVector end = GetActorLocation() + (sun->GetActorRotation().Vector() * -9999);
 	ECollisionChannel trace_channel = ECC_Visibility;
 	bool hit = GetWorld()->LineTraceSingleByChannel(RV_Hit, start, end, trace_channel);
+
+	//FString name = RV_Hit.GetActor()->GetHumanReadableName();
 
 	isInSun = !hit;
 	if (isInSun) {
@@ -192,7 +195,7 @@ void AObscuraCharacter::MoveForward(float Value)
 
 		// get forward vector
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-		AddMovementInput(Direction, Value/speedFactor);
+		AddMovementInput(Direction, Value*0.75f/speedFactor);
 	}
 }
 
@@ -207,14 +210,14 @@ void AObscuraCharacter::MoveRight(float Value)
 		// get right vector 
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		// add movement in that direction
-		AddMovementInput(Direction, Value/speedFactor);
+		AddMovementInput(Direction, Value*.75f/speedFactor);
 	}
 }
 
 // Called every frame
 void AObscuraCharacter::Tick(float DeltaTime)
 {
-	if (compass->isCompassOn && (fabs(xInput) > 0.1f || fabs(yInput) > 0.1f)) {
+	if ((compass->isCompassOn && (fabs(xInput) > 0.1f || fabs(yInput) > 0.1f)) || compass->isDirty) {
 		//UE_LOG(LogTemp, Warning, TEXT("axis inputs are %f %f"), xInput, yInput);
 		compass->setCompassPosition(xInput, yInput);
 	}

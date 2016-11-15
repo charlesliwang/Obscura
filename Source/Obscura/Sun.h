@@ -30,7 +30,12 @@ public:
 	float targetPitch;
 	bool rotateLock;
 	bool inputLock;
+	bool moving;
+	int targetPos;
+	float currDistanceTraveled;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		int sunPos;
+		int sunPos;	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float tickIncrement;
 };
