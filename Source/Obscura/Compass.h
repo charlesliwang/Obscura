@@ -95,4 +95,7 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	class ASun* sun;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool inPillarRange = false;
 };

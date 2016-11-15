@@ -34,6 +34,9 @@ public:
 	float xInput;
 	float yInput;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool pillarMode;
+
 	// Called every frame
 	virtual void Tick(float DeltaSeconds) override;
 
@@ -54,6 +57,10 @@ protected:
 	void CompassOn();
 
 	void CompassOff();
+
+	void PillarOn();
+
+	void PillarOff();
 
 	void updateInSun();
 

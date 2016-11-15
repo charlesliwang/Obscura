@@ -43,6 +43,7 @@ AObscuraCharacter::AObscuraCharacter()
 	damageTime = 0.0f;
 	speedFactor = 1.0f;
 
+	pillarMode = false;
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
@@ -84,6 +85,9 @@ void AObscuraCharacter::SetupPlayerInputComponent(class UInputComponent* InputCo
 	InputComponent->BindAction("ToggleCompass", IE_Pressed, this, &AObscuraCharacter::CompassOn);
 	InputComponent->BindAction("ToggleCompass", IE_Released, this, &AObscuraCharacter::CompassOff);
 	InputComponent->BindAction("CompassOverhead", IE_Pressed, this, &AObscuraCharacter::SetCompassOverhead);
+
+	InputComponent->BindAction("TogglePillar", IE_Pressed, this, &AObscuraCharacter::PillarOn);
+	InputComponent->BindAction("TogglePillar", IE_Released, this, &AObscuraCharacter::PillarOff);
 }
 
 void AObscuraCharacter::CompassOn() {
@@ -97,17 +101,26 @@ void AObscuraCharacter::CompassOff() {
 	UE_LOG(LogTemp, Warning, TEXT("compass off"));
 }
 
+void AObscuraCharacter::PillarOn() {
+	pillarMode = true;
+	UE_LOG(LogTemp, Warning, TEXT("pillar on"));
+}
+
+void AObscuraCharacter::PillarOff() {
+	pillarMode = false;
+	UE_LOG(LogTemp, Warning, TEXT("pillar off"));
+}
+
 void AObscuraCharacter::updateInSun() {
 	//hit info
 	FHitResult RV_Hit(ForceInit);
 
 	FVector start = GetActorLocation();
 	FVector end = GetActorLocation() + (sun->GetActorRotation().Vector() * -9999);
-	TArray<AActor*> ActorsToIgnore;
 	FCollisionQueryParams CollisionParams;
 	CollisionParams.AddIgnoredActor(this);
 	ECollisionChannel trace_channel = ECC_Visibility;
-	bool hit = GetWorld()->LineTraceSingleByChannel(RV_Hit, start, end, trace_channel, CollisionParams);
+	bool hit = GetWorld()->LineTraceSingleByChannel(RV_Hit, start, end, trace_channel);
 
 	isInSun = !hit;
 }
